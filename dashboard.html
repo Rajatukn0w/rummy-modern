@@ -1,16 +1,31 @@
-<script>
-  async function loadData() {
-    let res = await fetch("/api/logs");
-    let data = await res.json();
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pixel Dashboard</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 8px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>Live Pixel Clicks</h2>
+  <div id="output">Loading...</div>
 
-    let html = '<table><tr><th>Pixel ID</th><th>Clicks</th></tr>';
-    for (let id in data) {
-      html += `<tr><td>${id}</td><td>${data[id]}</td></tr>`;
+  <script>
+    async function loadData() {
+      let res = await fetch("/api/logs");
+      let data = await res.json();
+
+      let html = "<table><tr><th>Pixel ID</th><th>Clicks</th></tr>";
+      for (let row of data) {
+        html += `<tr><td>${row.id}</td><td>${row.count}</td></tr>`;
+      }
+      html += "</table>";
+      document.getElementById("output").innerHTML = html;
     }
-    html += '</table>';
-    document.getElementById("output").innerHTML = html;
-  }
 
-  loadData();
-  setInterval(loadData, 5000); // Refresh every 5 sec
-</script>
+    loadData();
+    setInterval(loadData, 5000);
+  </script>
+</body>
+</html>
