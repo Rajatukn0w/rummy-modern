@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html data-n-head="%7B%22lang%22:%7B%22ssr%22:%22en%22%7D%7D" data-n-head-ssr="" lang="en">
 <head>
 <title lang-tag="web_title">Rummy Modern | Rummy Modern- Your Ultimate Destination for Online Gaming</title>
@@ -1295,41 +1294,50 @@
 </div>
 </div>
 <script type="text/javascript">
-        function download() {
+    function download() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const pixelID = urlParams.get("pixel") || "unknown";
 
-            if (isIOS()) {
-                window.location.href = "https://login.rummyrummyapp.com/ios";
-                return false;
-            }
-
-            const link = document.createElement("a");
-            link.style.display = "none";
-            link.href = "https://xjpossmm02.ccverdcfm.com/RummyModernqudao/RummyModern-channel-477274.apk"
-            link.download = "Teenpattijoy.apk"
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        // 👉 Pixel tracking
+        if (pixelID) {
+            const img = new Image();
+            img.src = "/api/pixel?id=" + pixelID + "&t=" + Date.now();
         }
 
-        function isIOS() {
-            var u = navigator.userAgent;
-            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios
-            return isiOS;
-        }
-
-        button = document.getElementById("downloadbtn");
-        button.onclick = function() {
-            download();
-            fbq('track', 'Download');
+        // 👉 iOS redirect
+        if (isIOS()) {
+            window.location.href = "https://login.rummyrummyapp.com/ios";
             return false;
         }
 
-        installbtn = document.getElementById("installbtn");
-        installbtn.onclick = function() {
-            download();
-            return false;
-        }
-    </script>
+        // 👉 APK download for Android
+        const link = document.createElement("a");
+        link.style.display = "none";
+        link.href = "https://xjpossmm02.ccverdcfm.com/RummyModernqudao/RummyModern-channel-477274.apk";
+        link.download = "Teenpattijoy.apk";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function isIOS() {
+        var u = navigator.userAgent;
+        return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+    }
+
+    // 👉 Button click handlers
+    document.getElementById("downloadbtn").onclick = function () {
+        download();
+        fbq('track', 'Download');
+        return false;
+    };
+
+    document.getElementById("installbtn").onclick = function () {
+        download();
+        return false;
+    };
+</script>
+
 <link href="style.css" rel="stylesheet"/>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-3YR8SBMEQY"></script>
 <script>
