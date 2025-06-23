@@ -1,13 +1,10 @@
-// /api/pixel.js
-
 export default async function handler(req, res) {
   const { id = "unknown" } = req.query;
 
   const SUPABASE_URL = "https://bbzhdylabnexgpcjmxfz.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   const table = "pixel_clicks";
 
-  // Insert or update count
   const result = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
     method: "GET",
     headers: {
@@ -20,7 +17,6 @@ export default async function handler(req, res) {
   const data = await result.json();
 
   if (data.length > 0) {
-    // Update count
     await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
       method: "PATCH",
       headers: {
@@ -31,7 +27,6 @@ export default async function handler(req, res) {
       body: JSON.stringify({ count: data[0].count + 1 })
     });
   } else {
-    // Insert new pixel ID
     await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
       method: "POST",
       headers: {
@@ -47,4 +42,3 @@ export default async function handler(req, res) {
   res.setHeader("Content-Type", "image/gif");
   res.send(gif);
 }
-
