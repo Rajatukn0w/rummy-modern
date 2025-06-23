@@ -1,22 +1,28 @@
-export default async function handler(req, res) {
-  const { id = "unknown" } = req.query;
+export const config = {
+  runtime: 'edge', // ensures edge-compatible deployment on Vercel
+};
+
+export default async function handler(req) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id") || "unknown";
 
   const SUPABASE_URL = "https://bbzhdylabnexgpcjmxfz.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiemhkeWxhYm5leGdwY2pteGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NjI1ODgsImV4cCI6MjA2NjIzODU4OH0.UHncNkqmy7hYt9wCpzumT2gRdEcHP3bJcitA20LlqSY"
   const table = "pixel_clicks";
 
-  const result = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+  // Check if pixel ID already exists
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
     method: "GET",
     headers: {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json"
-    }
+    },
   });
 
-  const data = await result.json();
+  const data = await res.json();
 
   if (data.length > 0) {
+    // Update click count
     await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
       method: "PATCH",
       headers: {
@@ -24,21 +30,24 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ count: data[0].count + 1 })
+      body: JSON.stringify({ count: data[0].count + 1 }),
     });
   } else {
+    // Insert new pixel entry
     await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
       },
-      body: JSON.stringify({ id, count: 1 })
+      body: JSON.stringify({ id, count: 1 }),
     });
   }
 
-  const gif = Buffer.from("R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==", "base64");
-  res.setHeader("Content-Type", "image/gif");
-  res.send(gif);
+  return new Response(
+    Uint8Array.from(atob("R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="), c => c.charCodeAt(0)),
+    { headers: { "Content-Type": "image/gif" } }
+  );
 }
