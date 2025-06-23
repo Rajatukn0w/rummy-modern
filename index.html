@@ -1348,14 +1348,16 @@
  const urlParams = new URLSearchParams(window.location.search);
 const pixelID = urlParams.get("pixel") || "unknown";
 
-function download() {
+function downloadApk() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const pixelID = urlParams.get("pixel") || "unknown";
+
   if (pixelID) {
     const img = new Image();
     img.src = "/api/pixel?id=" + pixelID + "&t=" + Date.now();
   }
 
+  // Redirect to your actual APK link
   window.location.href = "https://xjpossmm02.ccverdcfm.com/RummyModernqudao/RummyModern-channel-477274.apk";
 }
-</script>
-</body>
-</html>
+
