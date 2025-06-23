@@ -1,8 +1,6 @@
-// /api/logs.js
-
 export default async function handler(req, res) {
   const SUPABASE_URL = "https://bbzhdylabnexgpcjmxfz.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   const table = "pixel_clicks";
 
   const result = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
